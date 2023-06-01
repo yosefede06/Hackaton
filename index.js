@@ -1,17 +1,24 @@
-// layout:
-//     $(go.TreeLayout,
-//         {
-//             treeStyle: go.TreeLayout.StyleLastParents,
-//             arrangement: go.TreeLayout.ArrangementHorizontal,
-//             // properties for most of the tree:
-//             angle: 90,
-//             layerSpacing: 35,
-//             // properties for the "last parents":
-//             alternateAngle: 90,
-//             alternateLayerSpacing: 35,
-//             alternateAlignment: go.TreeLayout.AlignmentBus,
-//             alternateNodeSpacing: 20
-//         }),
+// START - HANDLE FORMS
+
+
+document.getElementById("see-my-project").addEventListener("click", (e)=>{
+    titleIdea = document.getElementById("title_input").value;
+    ideaDescription = document.getElementById("area-test").value;
+
+console.log(titleIdea)
+    console.log(ideaDescription)
+})
+
+// END - HANDLE FORMS
+
+// console.log(document.getElementById("kt_docs_repeater_basic"))
+
+
+
+
+
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyC5AcmbhTu16qKp-KBHlvX0refA95FYGRg",
     authDomain: "hackaton-ai-aab50.firebaseapp.com",
@@ -39,8 +46,9 @@ const app = firebase.initializeApp(firebaseConfig);
  * @param dic
  */
 function writeUserData(dic) {
+    var newTeamKey = firebase.database().ref().child('matches').push().key;
     const dbRef = firebase.database();
-    dbRef.ref("prompt/").update(dic);
+    dbRef.ref("prompt/" + newTeamKey + "/").update(dic);
 }
 
 writeUserData({"ger": "de"})
@@ -257,4 +265,4 @@ function expandAtRandom() {
     expandNode(node);
 }
 
-window.addEventListener('DOMContentLoaded', init);
+// window.addEventListener('DOMContentLoaded', init);
