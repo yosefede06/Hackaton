@@ -44,6 +44,8 @@ function readUserData(_callback) {
         } else {
             console.log("No data available");
         }
+    }).then(() => {
+        console.log("verification email sent!")
     });
 }
 

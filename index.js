@@ -9,7 +9,12 @@ document.getElementById("see-my-project").addEventListener("click", (e)=>{
         attributes.push(document.getElementsByName("kt_docs_repeater_basic[" + i + "][account_name]")[0].value)
     }
 
-    writeUserData({'title': titleIdea, 'ideaDescription': ideaDescription, 'attributes': attributes})
+    writeUserData({'title': titleIdea, 'ideaDescription': ideaDescription, 'attributes': attributes}, ()=>{
+        setTimeout(()=>{
+            window.location.href = "steps.html"
+        }, 300)
+
+    })
 })
 
 // END - HANDLE FORMS
@@ -46,10 +51,12 @@ const app = firebase.initializeApp(firebaseConfig);
  * Writes data into realtime database for users
  * @param dic
  */
-function writeUserData(dic) {
+function writeUserData(dic, _callback) {
     var newTeamKey = firebase.database().ref().child('matches').push().key;
     const dbRef = firebase.database();
-    dbRef.ref("prompt/" + newTeamKey + "/").update(dic);
+    dbRef.ref("prompt/" + newTeamKey + "/").update(dic).then(() => {
+        _callback()
+    });
 }
 
 
@@ -67,6 +74,7 @@ function readUserData(_callback) {
             console.log("No data available");
         }
     });
+
 }
 
 readUserData((val)=>{
