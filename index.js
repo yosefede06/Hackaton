@@ -4,14 +4,15 @@
 document.getElementById("see-my-project").addEventListener("click", (e)=>{
     titleIdea = document.getElementById("title_input").value;
     ideaDescription = document.getElementById("area-test").value;
+    attributes = []
+    for (i = 0; i < document.querySelectorAll(".form-group .row").length; i++) {
+        attributes.push(document.getElementsByName("kt_docs_repeater_basic[" + i + "][account_name]")[0].value)
+    }
 
-console.log(titleIdea)
-    console.log(ideaDescription)
+    writeUserData({'title': titleIdea, 'ideaDescription': ideaDescription, 'attributes': attributes})
 })
 
 // END - HANDLE FORMS
-
-// console.log(document.getElementById("kt_docs_repeater_basic"))
 
 
 
@@ -51,7 +52,6 @@ function writeUserData(dic) {
     dbRef.ref("prompt/" + newTeamKey + "/").update(dic);
 }
 
-writeUserData({"ger": "de"})
 
 /**
  * Reads data into realtime database for users with connection
