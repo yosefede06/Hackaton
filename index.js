@@ -73,23 +73,35 @@ function init() {
     // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
     // For details, see https://gojs.net/latest/intro/buildingObjects.html
     const $ = go.GraphObject.make;  // for conciseness in defining templates
+    var baseColor = tinycolor("#95c2f5");
 
-    var blues = [
-        '#E1F5FE',
-        '#B3E5FC',
-        '#81D4FA',
-        '#4FC3F7',
-        '#29B6F6',
-        '#03A9F4',
-        '#039BE5',
-        '#0288D1',
-        '#0277BD',
-        '#01579B'];
+// Generate a palette of 10 colors
+    var blues = ["#95c2f5"];
+    for (var i = 0; i < 20; i++) {
+        var modifiedColor = baseColor.saturate(10).lighten(5);
+        blues.push(modifiedColor.toHexString());
+    }
+    // var blues = [
+    //     'transparent',
+    //     'transparent'];
 
     myDiagram = $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
             {
                 initialContentAlignment: go.Spot.Center,
-                layout: $(go.ForceDirectedLayout),
+                layout:
+                    $(go.TreeLayout,
+                        {
+                            treeStyle: go.TreeLayout.StyleLastParents,
+                            arrangement: go.TreeLayout.ArrangementHorizontal,
+                            // properties for most of the tree:
+                            angle: 90,
+                            layerSpacing: 35,
+                            // properties for the "last parents":
+                            alternateAngle: 90,
+                            alternateLayerSpacing: 35,
+                            alternateAlignment: go.TreeLayout.AlignmentBus,
+                            alternateNodeSpacing: 20
+                        }),
                 // moving and copying nodes also moves and copies their subtrees
                 "commandHandler.copiesTree": true,  // for the copy command
                 "commandHandler.deletesTree": true, // for the delete command
@@ -97,6 +109,9 @@ function init() {
                 "undoManager.isEnabled": true
             });
     myDiagram.contentAlignment = go.Spot.Center,
+
+
+
 
     // Define the Node template.
     // This uses a Spot Panel to position a button relative
@@ -111,8 +126,8 @@ function init() {
             // the node's outer shape, which will surround the text
             $(go.Panel, "Auto",
                 {name: "PANEL"},
-                $(go.Shape, "Rectangle",
-                    {fill: "lightblue", stroke: "black"},
+                $(go.Shape, "RoundedRectangle",
+                    {fill: "transparent", stroke: "#c1cee8", "strokeWidth": 5,},
                     new go.Binding("fill", "rootdistance", dist => {
                         dist = Math.min(blues.length - 1, dist);
                         return blues[dist];
@@ -128,11 +143,20 @@ function init() {
                     },
                     new go.Binding("text"))
             ),
+
             // the expand/collapse button, at the top-right corner
             $("TreeExpanderButton",
                 {
+                    "ButtonBorder.figure": "Circle",
+                    "ButtonBorder.fill": "#b6dbff",
+                    "ButtonBorder.stroke": "#87bcf5",
+                    "ButtonBorder.strokeWidth": 3,
+                    "_buttonFillOver": "#87bcf5",
+                    "_buttonStrokeOver": "#87bcf5",
+                    "_buttonFillPressed": "#87bcf5",
+
                     name: 'TREEBUTTON',
-                    width: 20, height: 20,
+                    width: 30, height: 30,
                     alignment: go.Spot.TopRight,
                     alignmentFocus: go.Spot.Center,
                     // customize the expander behavior to
@@ -188,6 +212,7 @@ function expandNode(node) {
 // for a node until we look for them the first time, which happens
 // upon the first tree-expand of a node.
 function createSubTree(parentdata) {
+
     var numchildren = Math.floor(3);
     if (myDiagram.nodes.count <= 1) {
         numchildren += 1;  // make sure the root node has at least one child
