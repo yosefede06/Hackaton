@@ -150,7 +150,7 @@ function createSubTree(parentdata) {
         degrees++;
         grandparent = grandparent.findTreeParentNode();
     }
-
+    var child;
     for (var i = 0; i < numchildren; i++) {
             var childdata = {
                 text: "Substantive Legal Issues Head",
@@ -163,20 +163,11 @@ function createSubTree(parentdata) {
         model.addNodeData(childdata);
 
         // position the new child node close to the parent
-        var child = myDiagram.findNodeForData(childdata);
+        child = myDiagram.findNodeForData(childdata);
 
         child.location = parent.location;
 
     };
-
-
-    // Assuming you have a diagram and a node in your GoJS diagram
-    var node = parent;
-    // myDiagram.commandHandler.increaseZoom(3);
-    // myDiagram.commandHandler.resetZoom();
-    myDiagram.commandHandler.scrollToPart(parent);
-    myDiagram.commandHandler.zoomToFit(parent);
-
     return numchildren;
 }
 
