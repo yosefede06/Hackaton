@@ -272,5 +272,6 @@ function expandAtRandom() {
     var node = eligibleNodes[Math.floor(Math.random() * (eligibleNodes.length))];
     expandNode(node);
 }
-
-// window.addEventListener('DOMContentLoaded', init);
+if (window.location.href.includes("steps.html")) {
+    window.addEventListener('DOMContentLoaded', init);
+}
