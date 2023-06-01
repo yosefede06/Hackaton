@@ -4,14 +4,20 @@
 document.getElementById("see-my-project").addEventListener("click", (e)=>{
     titleIdea = document.getElementById("title_input").value;
     ideaDescription = document.getElementById("area-test").value;
+    attributes = []
+    for (i = 0; i < document.querySelectorAll(".form-group .row").length; i++) {
+        attributes.push(document.getElementsByName("kt_docs_repeater_basic[" + i + "][account_name]")[0].value)
+    }
 
-console.log(titleIdea)
-    console.log(ideaDescription)
+    writeUserData({'title': titleIdea, 'ideaDescription': ideaDescription, 'attributes': attributes}, ()=>{
+        setTimeout(()=>{
+            window.location.href = "steps.html"
+        }, 300)
+
+    })
 })
 
 // END - HANDLE FORMS
-
-// console.log(document.getElementById("kt_docs_repeater_basic"))
 
 
 
@@ -45,13 +51,14 @@ const app = firebase.initializeApp(firebaseConfig);
  * Writes data into realtime database for users
  * @param dic
  */
-function writeUserData(dic) {
+function writeUserData(dic, _callback) {
     var newTeamKey = firebase.database().ref().child('matches').push().key;
     const dbRef = firebase.database();
-    dbRef.ref("prompt/" + newTeamKey + "/").update(dic);
+    dbRef.ref("prompt/" + newTeamKey + "/").update(dic).then(() => {
+        _callback()
+    });
 }
 
-writeUserData({"ger": "de"})
 
 /**
  * Reads data into realtime database for users with connection
@@ -67,6 +74,7 @@ function readUserData(_callback) {
             console.log("No data available");
         }
     });
+
 }
 
 readUserData((val)=>{
