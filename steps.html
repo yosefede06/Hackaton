@@ -226,8 +226,6 @@
           <iframe id="iframe-id" src="diagram.html" frameborder="0" style="width: 100%; height: 100%"></iframe>
           <div class="w-lg-700px p-10 p-lg-15 mx-auto">
 
-
-
           </div>
           <!--end::Wrapper-->
         </div>
@@ -251,25 +249,31 @@
     console.log(count)
     if(count === 5) {
       document.getElementById("iframe-id").style.display = "none"
-      document.getElementById("continue-button").innerHTML = "Download PDF"
+      but = document.getElementById("continue-button")
+      but.innerHTML = "Download PDF"
+
+
     }
     if (count === 6) {
       downloadPDF()
     }
     count +=1;
   })
-</script>
 
-<script>
   function downloadPDF() {
+    // var newTeamKey = firebase.database().ref().child('matches').push().key;
+
     var link = document.createElement('a');
-    link.href = 'assets/images/design_hackaton.pdf'; // Replace with the actual path to your PDF file
-    link.download = 'your_pdf_name.pdf'; // Replace with the desired name for the downloaded file
+    link.href = 'assets/images/final_pdf_unicorn.pdf'; // Replace with the actual path to your PDF file
+    link.download = 'final_pdf_unicorn.pdf'; // Replace with the desired name for the downloaded file
     link.target = '_blank';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
   }
+
+
 </script>
 <!--end::Page Custom Javascript-->
 <!--end::Javascript-->
