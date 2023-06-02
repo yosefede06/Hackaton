@@ -283,7 +283,7 @@ function expandAtRandom() {
     var node = eligibleNodes[Math.floor(Math.random() * (eligibleNodes.length))];
     expandNode(node);
 }
-if (window.location.href.includes("index.html")) {
+if (window.location.href.includes("diagram.html")) {
     window.addEventListener('DOMContentLoaded', init);
     var databaseRef = firebase.database().ref('promptOutput/' + localStorage.getItem("key"));
     // Set up event listener
