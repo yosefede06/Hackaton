@@ -1,5 +1,6 @@
 // START - HANDLE FORMS
 
+function handleForms () {
 
 document.getElementById("see-my-project").addEventListener("click", (e)=>{
     titleIdea = document.getElementById("title_input").value;
@@ -16,6 +17,7 @@ document.getElementById("see-my-project").addEventListener("click", (e)=>{
 
     })
 })
+}
 
 // END - HANDLE FORMS
 
@@ -46,17 +48,22 @@ const app = firebase.initializeApp(firebaseConfig);
 //     }, 400);
 // };
 
-
+function write_known_key(newTeamKey, dic, _callback) {
+    const dbRef = firebase.database();
+    dbRef.ref("prompt/" + newTeamKey + "/").update(dic).then(() => {
+        _callback()
+    });
+}
 /**
  * Writes data into realtime database for users
  * @param dic
  */
 function writeUserData(dic, _callback) {
     var newTeamKey = firebase.database().ref().child('matches').push().key;
-    const dbRef = firebase.database();
-    dbRef.ref("prompt/" + newTeamKey + "/").update(dic).then(() => {
-        _callback()
-    });
+    localStorage.setItem("key", newTeamKey);
+    write_known_key(newTeamKey, dic, ()=>{
+      _callback()
+    })
 }
 
 
@@ -81,10 +88,7 @@ readUserData((val)=>{
     console.log(val)
 })
 function init() {
-    var RANDOM_TEXT = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.." +
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.." +
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.." +
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.."
+    var RANDOM_TEXT = "IDEA AND RESEARCH"
 
     // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
     // For details, see https://gojs.net/latest/intro/buildingObjects.html
@@ -195,16 +199,28 @@ function init() {
     ]);
 
 
-    document.getElementById('zoomToFit').addEventListener('click', () => myDiagram.zoom());
 
-    document.getElementById('expandAtRandom').addEventListener('click', () => expandAtRandom());
 }
-
+flag = false
 function expandNode(node) {
     var diagram = node.diagram;
     diagram.startTransaction("CollapseExpandTree");
     // this behavior is specific to this incrementalTree sample:
     var data = node.data;
+    if (flag) {
+        write_known_key( localStorage.getItem("key"), {"click": data.text}, () => {
+            var databaseRef = firebase.database().ref('promptOutput/' + localStorage.getItem("key"));
+            // Set up event listener
+            databaseRef.on('value', function (snapshot) {
+                // This callback function will be called whenever there are changes in the database
+                var data = snapshot.val();
+                console.log(data)
+                numchildren = data.response.length
+                result_test = data.response
+            });
+        })
+    }
+    flag = true
     if (!data.everExpanded) {
         // only create children once per node
         diagram.model.setDataProperty(data, "everExpanded", true);
@@ -222,17 +238,13 @@ function expandNode(node) {
     diagram.commitTransaction("CollapseExpandTree");
     // myDiagram.zoomToFit();
 }
-
+var numchildren = 3
 // This dynamically creates the immediate children for a node.
 // The sample assumes that we have no idea of whether there are any children
 // for a node until we look for them the first time, which happens
 // upon the first tree-expand of a node.
 function createSubTree(parentdata) {
 
-    var numchildren = Math.floor(3);
-    if (myDiagram.nodes.count <= 1) {
-        numchildren += 1;  // make sure the root node has at least one child
-    }
     // create several node data objects and add them to the model
     var model = myDiagram.model;
     var parent = myDiagram.findNodeForData(parentdata);
@@ -246,10 +258,9 @@ function createSubTree(parentdata) {
     var child;
     for (var i = 0; i < numchildren; i++) {
             var childdata = {
-                text: "Substantive Legal Issues Head",
+                text: result_test[i],
                 key: model.nodeDataArray.length,
                 parent: parentdata.key,
-
                 rootdistance: degrees
             };
         // add to model.nodeDataArray and create a Node
@@ -263,7 +274,7 @@ function createSubTree(parentdata) {
     };
     return numchildren;
 }
-
+var result_test = []
 function expandAtRandom() {
     var eligibleNodes = [];
     myDiagram.nodes.each(n => {
@@ -272,6 +283,18 @@ function expandAtRandom() {
     var node = eligibleNodes[Math.floor(Math.random() * (eligibleNodes.length))];
     expandNode(node);
 }
-if (window.location.href.includes("steps.html")) {
+if (window.location.href.includes("index.html")) {
     window.addEventListener('DOMContentLoaded', init);
+    var databaseRef = firebase.database().ref('promptOutput/' + localStorage.getItem("key"));
+    // Set up event listener
+    databaseRef.on('value', function(snapshot) {
+        // This callback function will be called whenever there are changes in the database
+        var data = snapshot.val();
+        console.log(data)
+        numchildren = data.response.length
+        result_test = data.response
+    });
+}
+else {
+    handleForms()
 }

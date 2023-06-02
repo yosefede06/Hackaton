@@ -184,6 +184,20 @@
               <div class="stepper-label">
                 <h3 class="stepper-title">Generate your pdf</h3>
               </div>
+
+              <!--end::Label-->
+            </div>
+            <div class="stepper-item" data-kt-stepper-element="nav">
+              <!--begin::Line-->
+              <!--end::Line-->
+              <!--begin::Icon-->
+
+              <!--end::Icon-->
+              <!--begin::Label-->
+              <div class="stepper-label">
+                <h3 class="stepper-title"></h3>
+              </div>
+
               <!--end::Label-->
             </div>
             <!--end::Step 7-->
@@ -200,10 +214,10 @@
         <!--begin::Content-->
         <div class="d-flex flex-center flex-column flex-column-fluid" ">
           <!--begin::Wrapper-->
-          <iframe src="index.html" frameborder="0" style="width: 100%; height: 100%"></iframe>
+          <iframe id="iframe-id" src="index.html" frameborder="0" style="width: 100%; height: 100%"></iframe>
           <div class="w-lg-700px p-10 p-lg-15 mx-auto">
 
-          <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">
+          <button  id="continue-button" type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">
           Continue
                 <span class="svg-icon svg-icon-4 ms-1">
                                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -229,6 +243,18 @@
 <script src="assets/plugins/global/plugins.bundle.js"></script>
 <script src="assets/js/scripts.bundle.js"></script>
 <script src="assets/js/custom/utilities/modals/create-account.js"></script>
+<script>
+  count = 0;
+
+  document.getElementById("continue-button").addEventListener("click", ()=>{
+    console.log(count)
+    if(count === 5) {
+      document.getElementById("iframe-id").style.display = "none"
+      document.getElementById("continue-button").innerHTML = "Download PDF"
+    }
+    count +=1;
+  })
+</script>
 <!--end::Page Custom Javascript-->
 <!--end::Javascript-->
 </body>
